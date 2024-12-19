@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>skumsNchad | RustyWager Leaderboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Code THEZERO Shuffle Leaderboard!">
+    <meta property="og:image" content="screenshot">
+    <link rel="icon" type="image/png" href="images/new.logo.png">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <link rel="stylesheet" type="text/css" href="css/lb.css">
+    <link rel="stylesheet" type="text/css" href="css/vendor.css">
+    <script src="js/countdown-shuffle.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/toast.css">
+</head>
+
+<body>
+    <div id="toast">
+        <span id="message"></span>
+    </div>
+    <canvas id="particleCanvas"></canvas>
+    <header>
+        <nav>
+            <div class="logo-title">
+                <img src="images/new.logo.png" alt="Site logo" class="logo">
+                <h1 class="title">skumsNchad</h1>
+            </div>
+            <ul class="nav-links">
+            </ul>
+        </nav>
+    </header>
+    <div class="toggle-images" style="margin-top: 50px;">
+        <img class="game-image clash-image" id="clashImage" src="images/rslogo_2.png" style="cursor: pointer;opacity: 1;" onclick="window.location.href='index.html.html'">
+        <div class="vertical-line"></div>
+        <img class="game-image clash-image" id="clashImage" src="images/RustyWager.png" style="cursor: pointer;opacity: 0.3;" onclick="window.location.href='leaderboard1.html'">
+    </div>
+    <br>
+    <div data-v-1d580398="" data-v-e4097664="" id="appContent">
+        <div data-v-1d580398="">
+            <div data-v-1d580398="" class="row text">
+                <span data-v-1d580398="" class="title">
+                    <div data-v-1d580398="" class="price-wrapper glow">
+                        $ 50
+                    </div> CODE <span class="glow">Skums</span> Leaderboard!
+                </span>
+                <span data-v-1d580398="" class="subtitle" style="color: #FFF;">Every <b>BET</b> on RustyWager under Code
+                    <b>Skums</b>
+                    counts towards your score. <br>
+                    <i>The leaderboard updates every 15 seconds.</i><br>
+                </span>
+            </div>
+            <div class="css-esk2ah" id="leaderboard">
+                <!-- Dynamic leaderboard content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to update leaderboard
+        function updateLeaderboard() {
+            fetch('https://rustywager.com/api/partners/leaderboard?startDate=2024-09-01', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer 8a498eea-87b6-4969-a32a-ab3016651640'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Log the data to check if it's correct
+                console.log('API Response:', data);
+                
+                const leaderboardContainer = document.getElementById('leaderboard');
+                leaderboardContainer.innerHTML = '';  // Clear existing leaderboard
+
+                // Check if leaderboard data exists and is valid
+                if (data && data.leaderboard && Array.isArray(data.leaderboard)) {
+                    data.leaderboard.forEach((entry, index) => {
+                        const playerRank = index + 1;
+                        const playerName = entry.username;
+                        const wageredAmount = entry.wagered;
+                        const rewardAmount = entry.reward;
+
+                        // Log the player data for debugging
+                        console.log(`Player ${playerRank}: ${playerName} - Wagered: $${wageredAmount} Reward: $${rewardAmount}`);
+
+                        // Create a new leaderboard entry element
+                        const playerElement = document.createElement('div');
+                        playerElement.classList.add('css-jehefp');
+                        playerElement.innerHTML = `
+                            <img alt="${playerName}'s avatar" src="images/shuffle-logo.png" width="96" height="96" decoding="async" class="css-1wgwpc8">
+                            <div class="css-hca0vm"><span class="css-15a1lq3">${playerName}</span></div>
+                            <div class="css-7ahevu ejrykqo0">
+                                <span class="css-1vqddgv">Wagered: </span><span class="css-18icuxn">$${wageredAmount}</span>
+                            </div>
+                            <span class="css-v4675v">
+                                <div class="css-1y0ox2o">
+                                    <span class="css-114dvlx">$ ${rewardAmount}</span>
+                                </div>
+                            </span>
+                        `;
+                        leaderboardContainer.appendChild(playerElement);
+                    });
+                } else {
+                    console.log('No leaderboard data available or invalid format');
+                    leaderboardContainer.innerHTML = '<p>No leaderboard data available</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching leaderboard:', error);
+            });
+        }
+
+        // Initial leaderboard update
+        updateLeaderboard();
+
+        // Set interval to update leaderboard every 15 seconds
+        setInterval(updateLeaderboard, 15000);
+    </script>
+</body>
+</html>
+
+
